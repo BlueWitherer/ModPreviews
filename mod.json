@@ -19,8 +19,10 @@
         "community": "https://www.dsc.gg/cheeseworks"
     },
     "tags": [
+        "online",
         "enhancement",
-        "utility"
+        "utility",
+        "interface"
     ],
     "dependencies": {
         "alphalaneous.alphas_geode_utils": ">=v1.2.0"
