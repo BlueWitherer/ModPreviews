@@ -1,0 +1,28 @@
+{
+    "geode": "5.0.0",
+    "gd": {
+        "win": "2.2081",
+        "android": "2.2081",
+        "mac": "2.2081",
+        "ios": "2.2081"
+    },
+    "id": "cheeseworks.modpreviews",
+    "name": "Mod Previews",
+    "version": "1.0.0",
+    "developers": [
+        "Cheeseworks"
+    ],
+    "description": "View preview images for mods.",
+    "links": {
+        "source": "https://github.com/BlueWitherer/ModPreviews",
+        "homepage": "https://www.cheeseworks.gay/",
+        "community": "https://www.dsc.gg/cheeseworks"
+    },
+    "tags": [
+        "enhancement",
+        "utility"
+    ],
+    "dependencies": {
+        "alphalaneous.alphas_geode_utils": ">=v1.2.0"
+    }
+}
