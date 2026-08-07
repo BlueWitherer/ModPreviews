@@ -1,7 +1,15 @@
 #include "ImagePopup.hpp"
 
+#include <Geode/Geode.hpp>
+
+using namespace geode::prelude;
+
 bool ImagePopup::init(int page, int size, std::string url) {
-    auto geode = Loader::get()->getLoadedMod("geode.loader");  // yes im going this far to keep this mod at sdk 5.0.0 (check favorite mods)
+    m_page = page;
+    m_size = size;
+    m_url = std::move(url);
+
+    auto geode = Loader::get()->getLoadedMod("geode.loader");  // yes im going this far to keep this mod at sdk 5.0.0 (check favorite mods lol)
     bool geodeTheme = Loader::get()->getVersion().getMinor() >= 6 ? geode->getSettingValue<std::string>("used-theme") != "Geometry Dash" : geode->getSettingValue<bool>("enable-geode-theme");
 
     if (!Popup::init(380.f, 250.f, geodeTheme ? "geode.loader/GE_square01.png" : "GJ_square01.png")) return false;
@@ -34,10 +42,6 @@ bool ImagePopup::init(int page, int size, std::string url) {
     setCloseButtonSpr(
         CircleButtonSprite::createWithSpriteFrameName(
             "geode.loader/close.png", .85f, (geodeTheme ? CircleBaseColor::DarkPurple : CircleBaseColor::Green)));
-
-    m_page = page;
-    m_size = size;
-    m_url = url;
 
     showImage(page);
 
@@ -109,7 +113,7 @@ void ImagePopup::onNext(CCObject* sender) {
 
 ImagePopup* ImagePopup::create(int page, int size, std::string url) {
     auto ret = new ImagePopup();
-    if (ret->init(page, size, url)) {
+    if (ret->init(page, size, std::move(url))) {
         ret->autorelease();
         return ret;
     };
