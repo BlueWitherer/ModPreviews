@@ -1,5 +1,5 @@
 // original mod by alphalaneous
-// inherited by me !!!
+// source inherited & now maintained by me !!!
 #include "ImagePopup.h"
 
 #include "Macros.h"
