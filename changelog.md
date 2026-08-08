@@ -1,3 +1,7 @@
+# v1.0.3 
+- Added explicit support for [Codeberg](https://codeberg.org/) repositories
+- Optimized internal Forgejo caching
+
 # v1.0.2 
 - Bumped Geode loader support to `v5.8.0`
 - Fix internal caching for Forgejo repositories

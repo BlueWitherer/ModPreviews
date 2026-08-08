@@ -14,8 +14,8 @@
 using namespace geode::prelude;
 
 namespace cw {
-    static utils::StringMap<std::string>& repoCache() {
-        static utils::StringMap<std::string> inst;
+    static utils::StringSet& forgejo() noexcept {
+        static utils::StringSet inst;
         return inst;
     };
 };
@@ -211,8 +211,9 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
 
         if (platformURL == "github.com") rawURL = fmt::format("https://raw.githubusercontent.com/{}", repo);
         if (platformURL == "gitlab.com") rawURL = fmt::format("https://gitlab.com/{}/-/raw", repo);
+        if (platformURL == "codeberg.org") rawURL = fmt::format("https://codeberg.org/{}/raw/branch", repo);
 
-        if (auto it = cw::repoCache().find(repo); it != cw::repoCache().end()) rawURL = it->second;
+        if (auto it = cw::forgejo().find(platformURL); it != cw::forgejo().end()) rawURL = fmt::format("https://{}/{}/raw/branch", platformURL, repo);
 
         if (!rawURL.empty()) return callback(
             Ok(
@@ -246,7 +247,7 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
                     auto raw = fmt::format("https://{}/{}/raw/branch", platformURL, repo);
                     log::info("Detected Forgejo instance at {}, using {}", platformURL, raw);
 
-                    cw::repoCache()[repo] = raw;
+                    cw::forgejo().insert(platformURL);
 
                     return callback(
                         Ok(
