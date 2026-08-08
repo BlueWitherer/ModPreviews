@@ -1,5 +1,4 @@
 # v1.0.3 
-- Added explicit support for [Codeberg](https://codeberg.org/) repositories
 - Optimized internal Forgejo caching
 
 # v1.0.2 
