@@ -30,13 +30,13 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
         utils::StringMap<async::TaskHolder<web::WebResponse>> listeners;
 
         std::unordered_map<uint8_t, Ref<CCSprite>> previewSprites;
-        std::map<uint8_t, Ref<CCMenuItemSpriteExtra>> previewButtons;
+        std::map<uint8_t, Ref<Button>> previewButtons;
 
         Ref<CCNode> imagesContainer;
         std::vector<Ref<LazySprite>> sprites;
 
-        CCMenu* imagesList;
-        CCMenu* showAllMenu;
+        CCNode* imagesList;
+        CCNode* showAllMenu;
 
         bool hasShownImages;
         bool isShowingDescription;
@@ -94,7 +94,7 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
 
         auto f = m_fields.self();
 
-        f->imagesList = CCMenu::create();
+        f->imagesList = CCNode::create();
         f->imagesList->setZOrder(1);
         f->imagesList->setContentSize({262, 54});
         f->imagesList->setAnchorPoint({0.5, 0.5});
@@ -108,7 +108,7 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
         f->imagesContainer->setAnchorPoint({0, 0});
         f->imagesContainer->addChild(f->imagesList);
 
-        f->showAllMenu = CCMenu::create();
+        f->showAllMenu = CCNode::create();
         f->showAllMenu->setContentSize({20, 54});
         f->showAllMenu->setPosition({f->imagesContainer->getContentWidth() - 2.5f, f->imagesContainer->getContentHeight() / 2});
         f->showAllMenu->ignoreAnchorPointForPosition(false);
@@ -123,12 +123,10 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
             .85f,
             (geodeTheme ? CircleBaseColor::DarkPurple : CircleBaseColor::Green));
 
-        auto showAllBtn = CCMenuItemSpriteExtra::create(moreSpr, this, menu_selector(PreviewsModPopup::showPopup));
+        auto showAllBtn = Button::createWithNode(moreSpr, [this](Button* sender) { showPopup(sender->getTag()); });
         showAllBtn->setPosition(f->showAllMenu->getContentSize() / 2);
         showAllBtn->setScale(0.4f);
         showAllBtn->setTag(1);
-
-        showAllBtn->m_baseScale = 0.4f;
 
         f->showAllMenu->addChild(showAllBtn);
         f->imagesContainer->addChild(f->showAllMenu);
@@ -357,10 +355,10 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
         };
     };
 
-    void showPopup(CCObject* sender) {
+    void showPopup(int page) {
         auto f = m_fields.self();
 
-        auto popup = ImagePopup::create(sender->getTag(), f->previewSprites.size(), f->url);
+        auto popup = ImagePopup::create(page, f->previewSprites.size(), f->url);
         popup->show();
     };
 
@@ -370,11 +368,10 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
         auto scale = 54.f / spr->getContentHeight();
         spr->setScale(scale);
 
-        auto btn = CCMenuItemSpriteExtra::create(spr, this, menu_selector(PreviewsModPopup::showPopup));
+        auto btn = Button::createWithNode(spr, [this](Button* sender) { showPopup(sender->getTag()); });
         btn->setTag(id);
         btn->ignoreAnchorPointForPosition(true);
-
-        btn->m_scaleMultiplier = 1.1f;
+        btn->setScaleMultiplier(1.1f);
 
         f->previewSprites[id] = spr;
         f->previewButtons[id] = btn;
@@ -388,10 +385,10 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
 
         f->imagesList->removeAllChildren();
 
-        CCMenuItemSpriteExtra* lastButton = nullptr;
-
         auto gap = 2.5f;
         auto totalWidth = 0.f;
+
+        Button* lastButton = nullptr;
 
         for (auto& [k, v] : f->previewButtons) {
             if (lastButton) {

@@ -1,5 +1,6 @@
 # v1.0.2 
-- Fix caching for Forgejo repositories
+- Bumped Geode loader support to `v5.8.0`
+- Fix internal caching for Forgejo repositories
 
 # v1.0.1 
 - Internal tweaks
