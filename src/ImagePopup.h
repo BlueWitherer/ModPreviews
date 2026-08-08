@@ -3,7 +3,7 @@
 #include <Geode/Geode.hpp>
 
 class ImagePopup final : public geode::Popup {
-protected:
+private:
     uint8_t m_page;
     uint8_t m_size;
 
@@ -15,6 +15,7 @@ protected:
 
     std::unordered_map<uint8_t, geode::Ref<geode::LazySprite>> m_sprites;
 
+protected:
     bool init(uint8_t page, uint8_t size, std::string url);
 
 public:

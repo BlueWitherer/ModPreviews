@@ -13,6 +13,13 @@
 
 using namespace geode::prelude;
 
+namespace cw {
+    static utils::StringMap<std::string>& repoCache() {
+        static utils::StringMap<std::string> inst;
+        return inst;
+    };
+};
+
 struct RepoData final {
     std::string rawURL;
     std::string repo;
@@ -24,8 +31,6 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
 
         std::unordered_map<uint8_t, Ref<CCSprite>> previewSprites;
         std::map<uint8_t, Ref<CCMenuItemSpriteExtra>> previewButtons;
-
-        utils::StringMap<std::string> repoCache;
 
         Ref<CCNode> imagesContainer;
         std::vector<Ref<LazySprite>> sprites;
@@ -209,7 +214,7 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
         if (platformURL == "github.com") rawURL = fmt::format("https://raw.githubusercontent.com/{}", repo);
         if (platformURL == "gitlab.com") rawURL = fmt::format("https://gitlab.com/{}/-/raw", repo);
 
-        if (auto it = m_fields->repoCache.find(repo); it != m_fields->repoCache.end()) rawURL = it->second;
+        if (auto it = cw::repoCache().find(repo); it != cw::repoCache().end()) rawURL = it->second;
 
         if (!rawURL.empty()) return callback(
             Ok(
@@ -243,7 +248,7 @@ class $nodeModify(PreviewsModPopup, ModPopup) {
                     auto raw = fmt::format("https://{}/{}/raw/branch", platformURL, repo);
                     log::info("Detected Forgejo instance at {}, using {}", platformURL, raw);
 
-                    if (auto s = self.lock()) s->m_fields->repoCache[repo] = raw;
+                    cw::repoCache()[repo] = raw;
 
                     return callback(
                         Ok(
