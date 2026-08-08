@@ -15,10 +15,10 @@ This mod adds preview images to Geode mods' information pop-ups if their develop
 ---
 
 ### Viewing
-A small interface will appear at the bottom of the Geode mod information pop-up, where you can view and go through pages of preview images for that mod.
+A small interface should shortly appear at the bottom of the Geode mod information pop-up, where you can view and go through pages of preview images for that mod.
 
 ### Developers
-To add preview images, add a `previews/` folder in your repository, to which you will be able to add up to 10 PNG images to preview your mod! Each preview image must be named with the following format.
+To add preview images, first add a `previews/` folder to the root your repository, to which you will be able to add up to 10 PNG images to preview your mod! Each preview image must be named with the following format.
 
 > - `preview-`**`{num}`**`.png`
 

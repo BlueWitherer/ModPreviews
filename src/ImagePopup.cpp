@@ -1,16 +1,17 @@
-#include "ImagePopup.hpp"
+#include "ImagePopup.h"
+
+#include "Macros.h"
 
 #include <Geode/Geode.hpp>
 
 using namespace geode::prelude;
 
-bool ImagePopup::init(int page, int size, std::string url) {
+bool ImagePopup::init(uint8_t page, uint8_t size, std::string url) {
     m_page = page;
     m_size = size;
     m_url = std::move(url);
 
-    auto geode = Loader::get()->getLoadedMod("geode.loader");  // yes im going this far to keep this mod at sdk 5.0.0 (check favorite mods lol)
-    bool geodeTheme = Loader::get()->getVersion().getMinor() >= 6 ? geode->getSettingValue<std::string>("used-theme") != "Geometry Dash" : geode->getSettingValue<bool>("enable-geode-theme");
+    IS_GEODE_THEME(auto geodeTheme);
 
     if (!Popup::init(380.f, 250.f, geodeTheme ? "geode.loader/GE_square01.png" : "GJ_square01.png")) return false;
 
@@ -48,7 +49,7 @@ bool ImagePopup::init(int page, int size, std::string url) {
     return true;
 };
 
-void ImagePopup::showImage(int page) {
+void ImagePopup::showImage(uint8_t page) {
     if (m_currentImage) m_currentImage->removeFromParent();
 
     std::string previewURL = fmt::format("{}{}.png", m_url, page);
@@ -63,9 +64,7 @@ void ImagePopup::showImage(int page) {
         m_sprites[page] = spr;
 
         spr->setLoadCallback([this, spr](Result<> res) {
-            if (res.isOk()) {
-                onLoad(spr);
-            }
+            if (res.isOk()) onLoad(spr);
         });
 
         spr->loadFromUrl(previewURL);
@@ -77,18 +76,17 @@ void ImagePopup::showImage(int page) {
 };
 
 void ImagePopup::onLoad(LazySprite* spr) {
-    float maxWidth = 340.f;
-    float maxHeight = 210.f;
+    auto maxWidth = 340.f;
+    auto maxHeight = 210.f;
 
     CCSize originalSize = spr->getContentSize();
 
-    float scaleX = maxWidth / originalSize.width;
-    float scaleY = maxHeight / originalSize.height;
+    auto scaleX = maxWidth / originalSize.width;
+    auto scaleY = maxHeight / originalSize.height;
 
-    float scale = std::min(scaleX, scaleY);
+    auto scale = std::min(scaleX, scaleY);
 
     spr->setScale(scale);
-
     spr->setPosition(m_mainLayer->getContentSize() / 2);
     spr->setPositionY(spr->getPositionY() - 10);
 
@@ -111,7 +109,7 @@ void ImagePopup::onNext(CCObject* sender) {
     showImage(m_page);
 };
 
-ImagePopup* ImagePopup::create(int page, int size, std::string url) {
+ImagePopup* ImagePopup::create(uint8_t page, uint8_t size, std::string url) {
     auto ret = new ImagePopup();
     if (ret->init(page, size, std::move(url))) {
         ret->autorelease();
